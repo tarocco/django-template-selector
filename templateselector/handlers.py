@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.template.loaders import app_directories, filesystem, cached
 from os import scandir
+from pathlib import PurePath
 
 __all__ = ['get_results_from_registry']
 
@@ -17,6 +18,8 @@ usable_loaders = {}
 def from_filesystem(instance):
     dirs = instance.get_dirs()
     for directory in dirs:
+        if isinstance(directory, PurePath):
+            directory = directory.as_posix()
         strip_first = len(directory)
         for item in scandir_recursive(directory):
             if item.is_file():
