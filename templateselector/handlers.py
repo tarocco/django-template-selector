@@ -19,11 +19,12 @@ def from_filesystem(instance):
     dirs = instance.get_dirs()
     for directory in dirs:
         if isinstance(directory, PurePath):
-            directory = directory.as_posix()
+            directory = str(directory)
         strip_first = len(directory)
         for item in scandir_recursive(directory):
             if item.is_file():
-                yield item.path[strip_first+1:]
+                relative_path = item.path[strip_first+1:]
+                yield PurePath(relative_path).as_posix()
 
 def from_cached(instance):
     """
